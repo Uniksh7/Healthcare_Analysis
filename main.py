@@ -24,9 +24,20 @@ def main():
     rx=transformer.add_high_cost_flag(rx)
     rx.show(5,vertical=True)
 
-    elig=transformer.add_chronic_flag(claims)
+    elig=transformer.add_plan_flag(elig)
     elig.show(5)
 
+    # claims.printSchema()
+    elig.printSchema()
+    # rx.printSchema()
+
+#Joining different datasets
+    joiner=Analysis()
+    joined_claims_elig=joiner.join_claims_eligibility(claims,elig)
+    joined_claims_elig.select('claim_id','provider_name','health_plan_name','coverage_type').show(5)
+
+    joined_rx_elig=joiner.join_rx_eligibility(rx,elig)
+    joined_rx_elig.select('pid','plan_name','coverage_type','drug_type_code','billed_amount').show(5)
 
 if __name__ == "__main__":
     main()

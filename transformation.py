@@ -24,9 +24,8 @@ class Transformation:
     def add_age(self,df):
         return df.withColumn('age',(datediff(current_date(),col('dob'))/365).cast(IntegerType()))
     
-    def add_chronic_flag(self, df):
-        df_chronic=df.withColumn("chronic_flag",when(col("diag_code_1").startswith("J0"),1).otherwise(0))
-        return df_chronic.filter(col('chronic_flag')==1).select('pid','claim_id','chronic_flag')
+    def add_plan_flag(self, df):
+        return df.withColumn("plan_flag",when(col("plan_id").startswith("17956"), 1).otherwise(0))
     
     def member_spend(self,df):
         return df.groupBy('pid').agg(sum('paid_amount').alias('Total_spend'))
